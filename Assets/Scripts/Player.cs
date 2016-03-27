@@ -32,4 +32,5 @@ public class Player : MonoBehaviour
             Debug.Log("Hit " + hitCount + " times!");
         }
     }
+
 }

@@ -12,6 +12,7 @@
 // Enter at your own risk, and if you need to add or edit something to the GUI may mercy be with you
 //
 
+/*
 import System.Collections.Generic;
 #pragma strict
 #pragma downcast
@@ -693,3 +694,5 @@ class BulletPatternEditor extends Editor
 
 //lets be honest, you didnt expect me to comment the whole thing did you?
 
+
+*/
