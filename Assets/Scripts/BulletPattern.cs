@@ -34,13 +34,13 @@ public class BulletPattern : MonoBehaviour
     //These belong in the Editor class, as they control whether or not the GUI Foldouts are open or closed
     //However by putting them here they will actually SAVE whether or not they are open after deselecting the object
     //Bear in mind this does increase mememory usage somewhat (per BulletPattern object) so remove these on release version if necesaary
-    bool ftFoldout = false;
-    List<bool> ftFoldouts = new List<bool>();
-    bool btFoldout = false;
-    List<bool> btFoldouts = new List<bool>();
+    public bool ftFoldout = false;
+    public List<bool> ftFoldouts = new List<bool>();
+    public bool btFoldout = false;
+    public List<bool> btFoldouts = new List<bool>();
 
-    List<ActionFoldouts> ftaFoldouts = new List<ActionFoldouts>();
-    List<ActionFoldouts> btaFoldouts = new List<ActionFoldouts>();
+    public List<ActionFoldouts> ftaFoldouts = new List<ActionFoldouts>();
+    public List<ActionFoldouts> btaFoldouts = new List<ActionFoldouts>();
 
 
     public enum DirectionType { TargetPlayer, Absolute, Relative, Sequence };
@@ -337,7 +337,7 @@ public class BulletPattern : MonoBehaviour
 }
 
 //A FireTag is a procedure of sorts that is exposed to the GUI Inspector in Unity, it controls tha BulletPattern logic flow
-[System.Serializable]
+//[System.Serializable]
 public class FireTag
 {
     public float param = 0f;
@@ -383,7 +383,7 @@ public enum FireActionType { Wait, Fire, CallFireTag, StartRepeat, EndRepeat };
 
 //Not to be confused with an actual Bullet object. Like a fireTag, it is not physical but contains 
 //information important for creating and controlling bulets
-[System.Serializable]
+//[System.Serializable]
 public class BulletTag
 {
     public Vector3 speed;
@@ -402,10 +402,10 @@ public class PrevRotWrapper
 
 
 
-class ActionFoldouts
+public class ActionFoldouts
 {
-    bool main = false;
-    List<bool> sub = new List<bool>();
+    public bool main = false;
+    public List<bool> sub = new List<bool>();
 }
 
 public enum DirectionType { TargetPlayer, Absolute, Relative, Sequence };
