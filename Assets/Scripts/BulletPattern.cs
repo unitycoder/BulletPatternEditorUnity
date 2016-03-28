@@ -18,32 +18,44 @@ using System.Collections;
 public class BulletPattern : MonoBehaviour
 {
 
-    [HideInInspector]
+    [SerializeField]
     GameObject go;
-    [HideInInspector]
+    [SerializeField]
     Transform tform;
 
+    [SerializeField]
     public FireTag[] fireTags;
+    [SerializeField]
     public BulletTag[] bulletTags;
 
+    [SerializeField]
     float sequenceSpeed = 0f;
 
+    [SerializeField]
     bool started = false;
+    [SerializeField]
     public float waitBeforeRepeating = 5f;
 
 
     //These belong in the Editor class, as they control whether or not the GUI Foldouts are open or closed
     //However by putting them here they will actually SAVE whether or not they are open after deselecting the object
     //Bear in mind this does increase mememory usage somewhat (per BulletPattern object) so remove these on release version if necesaary
+    [SerializeField]
     public bool ftFoldout = false;
+    [SerializeField]
     public List<bool> ftFoldouts = new List<bool>();
+    [SerializeField]
     public bool btFoldout = false;
+    [SerializeField]
     public List<bool> btFoldouts = new List<bool>();
 
+    [SerializeField]
     public List<ActionFoldouts> ftaFoldouts = new List<ActionFoldouts>();
+    [SerializeField]
     public List<ActionFoldouts> btaFoldouts = new List<ActionFoldouts>();
 
 
+    [SerializeField]
     public enum DirectionType { TargetPlayer, Absolute, Relative, Sequence };
 
     //setting these saves a little time on referencing objects later
@@ -56,14 +68,17 @@ public class BulletPattern : MonoBehaviour
     //get the ball rolling
     void Start()
     {
-        InitiateFire();
+        StartCoroutine(InitiateFire());
     }
 
     //resume if the script was disabled then enabled, the bool prevents 2 calls to InstantiateFire on first startup
     void OnEnable()
     {
         if (started)
-            InitiateFire();
+        {
+            StartCoroutine(InitiateFire());
+        }
+            
     }
 
     //start the first FireTag in the array of tags, then repeat until disabled or destroyed
@@ -76,7 +91,7 @@ public class BulletPattern : MonoBehaviour
 
         while (true)
         {
-            yield return RunFire(0);
+            yield return StartCoroutine(RunFire(0));
             yield return new WaitForSeconds(waitBeforeRepeating * BulletManager.use.timePerFrame);
         }
     }
@@ -87,6 +102,7 @@ public class BulletPattern : MonoBehaviour
     // destroying objects is bad for performance.
     Bullet GetInstance(List<Bullet> arr , Transform tform , Bullet prefab)
     {
+
         for (var i = 0; i < arr.Count; i++)
         {
             var tempGo = (arr[i] as Component).gameObject;
@@ -211,8 +227,10 @@ public class BulletPattern : MonoBehaviour
     }
 
     //a wrapper so we can pass an int as reference in the next 2 IEnumerator functions
+    [System.Serializable]
     class IndexWrapper
     {
+        [SerializeField]
         public int idx = 0;
     }
 
@@ -223,7 +241,6 @@ public class BulletPattern : MonoBehaviour
         var iw = new IndexWrapper();
 
         if (ft.actions.Length == 0)
-
             Fire(tform, ft.actions[iw.idx], ft.param, ft.prw);
         else
         {
@@ -257,11 +274,11 @@ public class BulletPattern : MonoBehaviour
                             fireTags[idx].param = ft.param;
 
                         if (fireTags[idx].actions.Length > 0)
-                            yield return RunFire(idx);
+                            yield return StartCoroutine(RunFire(idx));
                         break;
 
                     case (FireActionType.StartRepeat):
-                        yield return RunNestedFire(i, iw);
+                        yield return StartCoroutine(RunNestedFire(i, iw));
                         break;
                 }
 
@@ -316,11 +333,11 @@ public class BulletPattern : MonoBehaviour
                             fireTags[idx].param = ft.param;
 
                         if (fireTags[idx].actions.Length > 0)
-                            yield return RunFire(idx);
+                            yield return StartCoroutine(RunFire(idx));
                         break;
 
                     case (FireActionType.StartRepeat):
-                        yield return RunNestedFire(i, iw);
+                        yield return StartCoroutine(RunNestedFire(i, iw));
                         break;
                 }
 
@@ -341,47 +358,72 @@ public class BulletPattern : MonoBehaviour
 [System.Serializable]
 public class FireTag
 {
+    [SerializeField]
     public float param = 0f;
+    [SerializeField]
     public PrevRotWrapper prw = new PrevRotWrapper();
+    [SerializeField]
     public FireAction[] actions;
 }
 // "BulletPatternAction", this is all the action related variables that both FireTag and Bullet actions have in common
 [System.Serializable]
 public class BPAction
 {
+    [SerializeField]
     public Vector3 waitTime;
+    [SerializeField]
     public bool randomWait = false;
+    [SerializeField]
     public bool rankWait = false;
 
+    [SerializeField]
     public DirectionType direction;
+    [SerializeField]
     public Vector3 angle;
+    [SerializeField]
     public bool randomAngle = false;
+    [SerializeField]
     public bool rankAngle = false;
 
+    [SerializeField]
     public bool overwriteBulletSpeed = false;
+    [SerializeField]
     public Vector3 speed;
+    [SerializeField]
     public bool randomSpeed = false;
+    [SerializeField]
     public bool rankSpeed = false;
+    [SerializeField]
     public bool useSequenceSpeed = false;
 
+    [SerializeField]
     public int bulletTagIndex = 0;
+    [SerializeField]
     public bool useParam = false;
 
+    [SerializeField]
     public int fireTagIndex = 0;
+    [SerializeField]
     public Vector2 repeatCount;
+    [SerializeField]
     public bool rankRepeat = false;
 
+    [SerializeField]
     public bool passParam = false;
+    [SerializeField]
     public bool passPassedParam = false;
+    [SerializeField]
     public Vector2 paramRange;
 }
 //only thing specific to FireTagActions is the name of actual action type, bullet actions have their own unique types
 [System.Serializable]
 public class FireAction : BPAction
 {
+    [SerializeField]
     public FireActionType type = FireActionType.Wait;
 }
 
+[SerializeField]
 public enum FireActionType { Wait, Fire, CallFireTag, StartRepeat, EndRepeat };
 
 //Not to be confused with an actual Bullet object. Like a fireTag, it is not physical but contains 
@@ -390,18 +432,25 @@ public enum FireActionType { Wait, Fire, CallFireTag, StartRepeat, EndRepeat };
 [System.Serializable]
 public class BulletTag
 {
+    [SerializeField]
     public Vector3 speed;
+    [SerializeField]
     public bool randomSpeed = false;
+    [SerializeField]
     public bool rankSpeed = false;
+    [SerializeField]
     public int prefabIndex = 0;
 
+    [SerializeField]
     public BulletAction[] actions;
 }
 //wrapper for passing by reference, so we can track each tag's previous fire rotation
 [System.Serializable]
 public class PrevRotWrapper
 {
+    [SerializeField]
     public Quaternion previousRotation;
+    [SerializeField]
     public bool prevRotationNull = true;
 }
 
@@ -409,9 +458,12 @@ public class PrevRotWrapper
 [System.Serializable]
 public class ActionFoldouts
 {
+    [SerializeField]
     public bool main = false;
+    [SerializeField]
     public List<bool> sub = new List<bool>();
 }
 
+[SerializeField]
 public enum DirectionType { TargetPlayer, Absolute, Relative, Sequence };
 

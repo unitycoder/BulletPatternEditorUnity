@@ -1,25 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[SerializeField]
+[System.Serializable]
 public class Bullet : MonoBehaviour
 {
-    [HideInInspector]
+    [SerializeField]
     GameObject go;
-    [HideInInspector]
+    [SerializeField]
     public Transform tform;
-    [HideInInspector]
+    [SerializeField]
     Rigidbody rb;
 
+    [SerializeField]
     public float speed = 5f;
-    float verticalSpeed = 0f;
-    bool useVertical = false;
-    float lifetime = 0f;
-    PrevRotWrapper prw = new PrevRotWrapper();
+    [SerializeField]
+    public float verticalSpeed = 0f;
+    [SerializeField]
+    public bool useVertical = false;
+    [SerializeField]
+    public float lifetime = 0f;
+    [SerializeField]
+    public PrevRotWrapper prw = new PrevRotWrapper();
+    [SerializeField]
     public BulletAction[] actions;
+    [SerializeField]
     public float param = 0f;
-    int actionIndex = 0;
+    [SerializeField]
+    public int actionIndex = 0;
 
+    [SerializeField]
     public BulletPattern master;
 
     void Awake()
@@ -31,7 +40,7 @@ public class Bullet : MonoBehaviour
         //make sure this bullet knows whos his daddy
         //actually its so 100 bullet objects dont clutter the hierarchy window
 
-        //tform.parent = BulletManager.use.transform;
+        tform.parent = BulletManager.use.transform;
     }
 
 
@@ -42,7 +51,7 @@ public class Bullet : MonoBehaviour
         // dont bother with vertical speed unless its been tampered with (see ChangeSpeedVertical..or was it SpeedChangeVertical?)
         if (useVertical)
         {
-            //            targetVelocity += BulletManager.use.MainCam.up * verticalSpeed;
+                        targetVelocity += BulletManager.use.MainCam.up * verticalSpeed;
         }
         var velocityChange = (targetVelocity - rb.velocity);
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
@@ -77,20 +86,20 @@ public class Bullet : MonoBehaviour
                     break;
                 case (BulletActionType.ChangeDirection):
                     if (actions[actionIndex].waitForChange)
-                        yield return ChangeDirection(actionIndex);
+                        yield return StartCoroutine(ChangeDirection(actionIndex));
                     else
 
-                        ChangeDirection(actionIndex);
+                        StartCoroutine(ChangeDirection(actionIndex));
                     break;
                 case (BulletActionType.ChangeSpeed):
                     if (actions[actionIndex].waitForChange)
-                        yield return ChangeSpeed(actionIndex, false);
+                        yield return StartCoroutine(ChangeSpeed(actionIndex, false));
                     else
 
-                        ChangeSpeed(actionIndex, false);
+                        StartCoroutine(ChangeSpeed(actionIndex, false));
                     break;
                 case (BulletActionType.StartRepeat):
-                    yield return RunNestedActions();
+                    yield return StartCoroutine(RunNestedActions());
                     break;
                 case (BulletActionType.Fire):
                     if (master != null)
@@ -98,10 +107,10 @@ public class Bullet : MonoBehaviour
                     break;
                 case (BulletActionType.VerticalChangeSpeed):
                     if (actions[actionIndex].waitForChange)
-                        yield return ChangeSpeed(actionIndex, true);
+                        yield return StartCoroutine(ChangeSpeed(actionIndex, true));
                     else
 
-                        ChangeSpeed(actionIndex, true);
+                        StartCoroutine(ChangeSpeed(actionIndex, true));
                     break;
                 case (BulletActionType.Deactivate):
                     Deactivate();
@@ -142,13 +151,13 @@ public class Bullet : MonoBehaviour
                         if (actions[actionIndex].waitForChange)
                             yield return ChangeDirection(actionIndex);
                         else
-                            ChangeDirection(actionIndex);
+                            StartCoroutine(ChangeDirection(actionIndex));
                         break;
                     case (BulletActionType.ChangeSpeed):
                         if (actions[actionIndex].waitForChange)
                             yield return ChangeSpeed(actionIndex, false);
                         else
-                            ChangeSpeed(actionIndex, false);
+                            StartCoroutine(ChangeSpeed(actionIndex, false));
                         break;
                     case (BulletActionType.EndRepeat):
                         yield return RunNestedActions();
@@ -161,7 +170,7 @@ public class Bullet : MonoBehaviour
                         if (actions[actionIndex].waitForChange)
                             yield return ChangeSpeed(actionIndex, true);
                         else
-                            ChangeSpeed(actionIndex, true);
+                            StartCoroutine(ChangeSpeed(actionIndex, true));
                         break;
                     case (BulletActionType.Deactivate):
                         Deactivate();
@@ -348,12 +357,16 @@ public class Bullet : MonoBehaviour
 
 
 //exclusive bullet action variables
+[System.Serializable]
 public class BulletAction : BPAction
 {
+    [SerializeField]
     public BulletActionType type = BulletActionType.Wait;
+    [SerializeField]
     public bool waitForChange = false;
 }
 
+[System.Serializable]
 public enum BulletActionType
 {
     Wait,

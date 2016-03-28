@@ -18,15 +18,19 @@ using UnityEditor;
 using System.Collections.Generic;
 
 [CustomEditor(typeof(BulletPattern))]
+[CanEditMultipleObjects]
 public class BulletPatternEditor : Editor
 {
+    [SerializeField]
     BulletPattern bp;
+    [SerializeField]
     BulletManager bm;
 
     void OnEnable()
     {
         bp = target as BulletPattern;
         bm = GameObject.Find("BulletManager").GetComponent<BulletManager>();
+
     }
 
     public override void OnInspectorGUI()
@@ -38,6 +42,13 @@ public class BulletPatternEditor : Editor
         EditorGUIUtility.LookLikeControls(130);
         bp.waitBeforeRepeating = EditorGUILayout.FloatField("WaitBeforeRepeat", bp.waitBeforeRepeating);
         bm.rank = EditorGUILayout.Slider("Rank", bm.rank, 0, 1);
+
+        // temporary fix for losing prefab inspector fields when entering play
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(bp);
+            serializedObject.ApplyModifiedProperties();
+        }
     }
 
     void FireTagsGUI()

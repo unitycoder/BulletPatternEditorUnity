@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class BulletManager : MonoBehaviour
 {
 
+    [SerializeField]
     public List<BulletList> bullets = new List<BulletList>();
 
     public Bullet[] bulletPrefab;
