@@ -45,14 +45,14 @@ public class BulletPatternEditor : Editor
         if (bp.fireTags == null)
             bp.fireTags = new FireTag[0];
 
-        List<FireTag> fireTags = new List< FireTag > (bp.fireTags);
+        List<FireTag> fireTags = new List<FireTag>(bp.fireTags);
 
         if (fireTags.Count != bp.ftFoldouts.Count)
-            bp.ftFoldouts = new List< bool > (new bool[fireTags.Count]);
+            bp.ftFoldouts = new List<bool>(new bool[fireTags.Count]);
 
         if (fireTags.Count != bp.ftaFoldouts.Count)
         {
-            bp.ftaFoldouts = new List< ActionFoldouts > (new ActionFoldouts[fireTags.Count]);
+            bp.ftaFoldouts = new List<ActionFoldouts>(new ActionFoldouts[fireTags.Count]);
             if (bp.ftaFoldouts.Count > 0)
             {
                 for (var zz = 0; zz < bp.ftaFoldouts.Count; zz++)
@@ -145,6 +145,7 @@ public class BulletPatternEditor : Editor
                 ft.actions = new FireAction[1];
 
                 fireTags.Add(ft);
+
                 bp.ftFoldouts.Add(true);
                 bp.ftaFoldouts.Add(new ActionFoldouts());
 
@@ -163,13 +164,16 @@ public class BulletPatternEditor : Editor
     //start the FireActions stuff. Its actually even longer and uglier then the previous function
     void FireTagActionsGUI(int i)
     {
-        if (bp.fireTags[i].actions.Length == 0)
-            bp.fireTags[i].actions = new FireAction[1];
 
-        var actions = new List< FireAction > (bp.fireTags[i].actions);
+        if (bp.fireTags[i].actions.Length == 0)
+        {
+            bp.fireTags[i].actions = new FireAction[1];
+        }
+        
+        var actions = new List<FireAction>(bp.fireTags[i].actions);
 
         if (actions.Count != bp.ftaFoldouts[i].sub.Count)
-            bp.ftaFoldouts[i].sub = new List< bool > (new bool[actions.Count]);
+            bp.ftaFoldouts[i].sub = new List<bool>(new bool[actions.Count]);
 
         GUILayout.BeginHorizontal();
         bp.ftaFoldouts[i].main = EditorGUILayout.Foldout(bp.ftaFoldouts[i].main, "Actions");
@@ -344,14 +348,14 @@ public class BulletPatternEditor : Editor
         if (bp.bulletTags == null)
             bp.bulletTags = new BulletTag[0];
 
-        var bulletTags = new List< BulletTag > (bp.bulletTags);
+        var bulletTags = new List<BulletTag>(bp.bulletTags);
 
         if (bulletTags.Count != bp.btFoldouts.Count)
-            bp.btFoldouts = new List< bool > (new bool[bulletTags.Count]);
+            bp.btFoldouts = new List<bool>(new bool[bulletTags.Count]);
 
         if (bulletTags.Count != bp.btaFoldouts.Count)
         {
-            bp.btaFoldouts = new List< ActionFoldouts > (new ActionFoldouts[bulletTags.Count]);
+            bp.btaFoldouts = new List<ActionFoldouts>(new ActionFoldouts[bulletTags.Count]);
             if (bp.btaFoldouts.Count > 0)
             {
                 for (var zz = 0; zz < bp.btaFoldouts.Count; zz++)
@@ -475,10 +479,10 @@ public class BulletPatternEditor : Editor
         if (bp.bulletTags[i].actions == null)
             bp.bulletTags[i].actions = new BulletAction[0];
 
-        var actions = new List< BulletAction > (bp.bulletTags[i].actions);
+        var actions = new List<BulletAction>(bp.bulletTags[i].actions);
 
         if (actions.Count != bp.btaFoldouts[i].sub.Count)
-            bp.btaFoldouts[i].sub = new List< bool > (new bool[actions.Count]);
+            bp.btaFoldouts[i].sub = new List<bool>(new bool[actions.Count]);
 
         GUILayout.BeginHorizontal();
         bp.btaFoldouts[i].main = EditorGUILayout.Foldout(bp.btaFoldouts[i].main, "Actions");

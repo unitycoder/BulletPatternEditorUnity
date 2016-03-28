@@ -14,6 +14,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
+[System.Serializable]
 public class BulletPattern : MonoBehaviour
 {
 
@@ -337,7 +338,7 @@ public class BulletPattern : MonoBehaviour
 }
 
 //A FireTag is a procedure of sorts that is exposed to the GUI Inspector in Unity, it controls tha BulletPattern logic flow
-//[System.Serializable]
+[System.Serializable]
 public class FireTag
 {
     public float param = 0f;
@@ -345,6 +346,7 @@ public class FireTag
     public FireAction[] actions;
 }
 // "BulletPatternAction", this is all the action related variables that both FireTag and Bullet actions have in common
+[System.Serializable]
 public class BPAction
 {
     public Vector3 waitTime;
@@ -374,6 +376,7 @@ public class BPAction
     public Vector2 paramRange;
 }
 //only thing specific to FireTagActions is the name of actual action type, bullet actions have their own unique types
+[System.Serializable]
 public class FireAction : BPAction
 {
     public FireActionType type = FireActionType.Wait;
@@ -384,6 +387,7 @@ public enum FireActionType { Wait, Fire, CallFireTag, StartRepeat, EndRepeat };
 //Not to be confused with an actual Bullet object. Like a fireTag, it is not physical but contains 
 //information important for creating and controlling bulets
 //[System.Serializable]
+[System.Serializable]
 public class BulletTag
 {
     public Vector3 speed;
@@ -394,6 +398,7 @@ public class BulletTag
     public BulletAction[] actions;
 }
 //wrapper for passing by reference, so we can track each tag's previous fire rotation
+[System.Serializable]
 public class PrevRotWrapper
 {
     public Quaternion previousRotation;
@@ -401,7 +406,7 @@ public class PrevRotWrapper
 }
 
 
-
+[System.Serializable]
 public class ActionFoldouts
 {
     public bool main = false;
