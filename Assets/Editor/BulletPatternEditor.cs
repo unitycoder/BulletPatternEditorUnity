@@ -661,7 +661,7 @@ public class BulletPatternEditor : Editor
                                 ac.useSequenceSpeed = EditorGUILayout.Toggle("UseSequence", ac.useSequenceSpeed);
                             }
                             EditorGUILayout.Space();
-                            ac.bulletTagIndex = EditorGUILayout.IntSlider("BulletTagIdx", ac.bulletTagIndex, 1, (int)bp.bulletTags.Length);
+                            ac.bulletTagIndex = EditorGUILayout.IntSlider("BulletTagIdx", ac.bulletTagIndex, 1, bp.bulletTags.Length);
                             break;
                     }
                     EditorGUI.indentLevel--;
