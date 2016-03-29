@@ -3,14 +3,18 @@
 public class Player : MonoBehaviour
 {
 
-   public  float speed = 24f;
+    public GameObject go;
+    public Transform tform;
+    public Rigidbody rb;
+    public float speed = 24f;
 
     int hitCount = 0;
-    Rigidbody rb;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        go = gameObject;
+        tform = transform;
     }
 
     void FixedUpdate()

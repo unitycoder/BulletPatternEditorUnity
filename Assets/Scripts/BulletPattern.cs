@@ -78,7 +78,7 @@ public class BulletPattern : MonoBehaviour
         {
             StartCoroutine(InitiateFire());
         }
-            
+
     }
 
     //start the first FireTag in the array of tags, then repeat until disabled or destroyed
@@ -100,16 +100,16 @@ public class BulletPattern : MonoBehaviour
     //Gets a bullet and returns it. We look through BulletManager's bullet pool to see if a bullet
     // is available, so we can avoid creating abullet if possible. Infinitely creating and
     // destroying objects is bad for performance.
-    Bullet GetInstance(List<Bullet> arr , Transform tform , Bullet prefab)
+    Bullet GetInstance(List<Bullet> arr, Transform tform, Bullet prefab)
     {
 
         for (var i = 0; i < arr.Count; i++)
         {
             var tempGo = (arr[i] as Component).gameObject;
 
-            if (!tempGo.active)
+            if (!tempGo.activeSelf)
             {
-                tempGo.SetActiveRecursively(true);
+                tempGo.SetActive(true);
                 return arr[i];
             }
         }
@@ -120,10 +120,13 @@ public class BulletPattern : MonoBehaviour
     }
 
     //creates a bullet and initiales its parameters
-    public void Fire(Transform t , BPAction a, float param , PrevRotWrapper prw)
+    public void Fire(Transform t, BPAction a, float param, PrevRotWrapper prw)
     {
         //find the correct bulletTag that has info for this bullet
         var bt = bulletTags[a.bulletTagIndex - 1];
+
+        //Debug.Log("bt:"+bt.actions[0].type);
+
         //get the bullet
         Bullet temp = GetInstance(BulletManager.use.bullets[bt.prefabIndex].bl, t, BulletManager.use.bulletPrefab[bt.prefabIndex]);
 
@@ -148,6 +151,7 @@ public class BulletPattern : MonoBehaviour
             if (a.rankAngle)
                 ang += BulletManager.use.rank * a.angle.z;
         }
+
         //actually point the bullet in the right direction
         switch ((DirectionType)a.direction)
         {
@@ -209,6 +213,7 @@ public class BulletPattern : MonoBehaviour
             if (bt.rankSpeed)
                 temp.speed += BulletManager.use.rank * bt.speed.z;
         }
+
         //set the bullets actions array, so it can perform actions later if it has any
         temp.actions = bt.actions;
 
@@ -261,7 +266,6 @@ public class BulletPattern : MonoBehaviour
                         break;
 
                     case (FireActionType.Fire):
-
                         Fire(tform, ft.actions[iw.idx], ft.param, ft.prw);
                         break;
 
@@ -320,7 +324,6 @@ public class BulletPattern : MonoBehaviour
                         break;
 
                     case (FireActionType.Fire):
-
                         Fire(tform, ft.actions[iw.idx], ft.param, ft.prw);
                         break;
 

@@ -4,12 +4,12 @@ using System.Collections;
 [System.Serializable]
 public class Bullet : MonoBehaviour
 {
-    [SerializeField]
-    GameObject go;
-    [SerializeField]
+    [HideInInspector]
+    public GameObject go;
+    [HideInInspector]
     public Transform tform;
-    [SerializeField]
-    Rigidbody rb;
+    [HideInInspector]
+    public Rigidbody rb;
 
     [SerializeField]
     public float speed = 5f;
@@ -51,7 +51,7 @@ public class Bullet : MonoBehaviour
         // dont bother with vertical speed unless its been tampered with (see ChangeSpeedVertical..or was it SpeedChangeVertical?)
         if (useVertical)
         {
-                        targetVelocity += BulletManager.use.MainCam.up * verticalSpeed;
+            targetVelocity += BulletManager.use.MainCam.up * verticalSpeed;
         }
         var velocityChange = (targetVelocity - rb.velocity);
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
@@ -88,14 +88,12 @@ public class Bullet : MonoBehaviour
                     if (actions[actionIndex].waitForChange)
                         yield return StartCoroutine(ChangeDirection(actionIndex));
                     else
-
                         StartCoroutine(ChangeDirection(actionIndex));
                     break;
                 case (BulletActionType.ChangeSpeed):
                     if (actions[actionIndex].waitForChange)
                         yield return StartCoroutine(ChangeSpeed(actionIndex, false));
                     else
-
                         StartCoroutine(ChangeSpeed(actionIndex, false));
                     break;
                 case (BulletActionType.StartRepeat):
@@ -109,7 +107,6 @@ public class Bullet : MonoBehaviour
                     if (actions[actionIndex].waitForChange)
                         yield return StartCoroutine(ChangeSpeed(actionIndex, true));
                     else
-
                         StartCoroutine(ChangeSpeed(actionIndex, true));
                     break;
                 case (BulletActionType.Deactivate):
@@ -196,15 +193,15 @@ public class Bullet : MonoBehaviour
         verticalSpeed = 0f;
         useVertical = false;
         prw.prevRotationNull = true;
-        RunActions();
+        StartCoroutine(RunActions());
     }
     //we dont actually destroy bullets, were all about recycling
     void Deactivate()
     {
-        if (go.active)
+        if (go.activeSelf)
         {
             BulletManager.use.bulletCount--;
-            go.SetActiveRecursively(false);
+            go.SetActive(false);
         }
     }
 
@@ -290,6 +287,7 @@ public class Bullet : MonoBehaviour
     //its basically the same as the above except without rotations
     IEnumerator ChangeSpeed(int i, bool isVertical)
     {
+
         var t = 0f;
         var s = 0f;
 
