@@ -17,9 +17,6 @@ using System.Collections;
 [System.Serializable]
 public class BulletPattern : MonoBehaviour
 {
-
-    [SerializeField]
-    GameObject go;
     [SerializeField]
     Transform tform;
 
@@ -61,7 +58,6 @@ public class BulletPattern : MonoBehaviour
     //setting these saves a little time on referencing objects later
     void Awake()
     {
-        go = gameObject;
         tform = transform;
     }
 

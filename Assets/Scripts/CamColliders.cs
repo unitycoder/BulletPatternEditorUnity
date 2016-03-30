@@ -13,20 +13,10 @@ public class CamColliders : MonoBehaviour
 
     public LayerMask collideMask;
 
-    float bottomPos;
-    float topPos;
-    float rightPos;
-    float leftPos;
-
     void Awake()
     {
         use = this;
         tform = transform;
-
-        bottomPos = bottom.localPosition.y;
-        topPos = top.localPosition.y;
-        rightPos = right.localPosition.x;
-        leftPos = left.localPosition.x;
     }
 
     public bool IsInsideBox(Vector3 pos)

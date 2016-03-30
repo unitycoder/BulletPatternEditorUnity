@@ -39,7 +39,9 @@ public class BulletPatternEditor : Editor
         BulletTagsGUI();
 
         EditorGUILayout.Space();
-        EditorGUIUtility.LookLikeControls(130);
+        EditorGUIUtility.labelWidth = 160;
+        EditorGUIUtility.fieldWidth = 130;
+
         bp.waitBeforeRepeating = EditorGUILayout.FloatField("WaitBeforeRepeat", bp.waitBeforeRepeating);
         bm.rank = EditorGUILayout.Slider("Rank", bm.rank, 0, 1);
 
@@ -92,7 +94,9 @@ public class BulletPatternEditor : Editor
 
             for (var l = 0; l < fireTags.Count; l++)
             {
-                EditorGUIUtility.LookLikeControls(120);
+                EditorGUIUtility.labelWidth = 160;
+                EditorGUIUtility.fieldWidth = 120;
+
                 GUILayout.BeginHorizontal();
                 var str = "FireTag " + (l + 1);
                 bp.ftFoldouts[l] = EditorGUILayout.Foldout(bp.ftFoldouts[l], str);
@@ -205,7 +209,9 @@ public class BulletPatternEditor : Editor
 
             for (int l = 0; l < actions.Count; l++)
             {
-                EditorGUIUtility.LookLikeControls(125);
+                EditorGUIUtility.labelWidth = 160;
+                EditorGUIUtility.fieldWidth = 125;
+
                 GUILayout.BeginHorizontal();
                 var str = "Action " + (l + 1);
                 bp.ftaFoldouts[i].sub[l] = EditorGUILayout.Foldout(bp.ftaFoldouts[i].sub[l], str);
@@ -395,7 +401,9 @@ public class BulletPatternEditor : Editor
 
             for (var l = 0; l < bulletTags.Count; l++)
             {
-                EditorGUIUtility.LookLikeControls(100);
+                EditorGUIUtility.labelWidth = 140;
+                EditorGUIUtility.fieldWidth = 100;
+
                 GUILayout.BeginHorizontal();
                 var str = "BulletTag " + (l + 1);
                 bp.btFoldouts[l] = EditorGUILayout.Foldout(bp.btFoldouts[l], str);
@@ -514,7 +522,9 @@ public class BulletPatternEditor : Editor
 
             for (var l = 0; l < actions.Count; l++)
             {
-                EditorGUIUtility.LookLikeControls(125);
+                EditorGUIUtility.labelWidth = 140;
+                EditorGUIUtility.fieldWidth = 100;
+
                 GUILayout.BeginHorizontal();
                 var str = "Action " + (l + 1);
                 bp.btaFoldouts[i].sub[l] = EditorGUILayout.Foldout(bp.btaFoldouts[i].sub[l], str);
