@@ -28,12 +28,12 @@ public class BulletManager : MonoBehaviour
     public float timePerFrame = 0.01666f;
     //original value = 0.01666; (approximately one 60th of a second)
 
-    public static BulletManager use;
+    public static BulletManager instance;
 
 
     void Awake()
     {
-        use = this;
+        instance = this;
 
         for (var i = 0; i < bulletPrefab.Length; i++)
         {

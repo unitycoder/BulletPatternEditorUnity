@@ -88,7 +88,7 @@ public class BulletPattern : MonoBehaviour
         while (true)
         {
             yield return StartCoroutine(RunFire(0));
-            yield return new WaitForSeconds(waitBeforeRepeating * BulletManager.use.timePerFrame);
+            yield return new WaitForSeconds(waitBeforeRepeating * BulletManager.instance.timePerFrame);
         }
     }
 
@@ -124,16 +124,17 @@ public class BulletPattern : MonoBehaviour
         //Debug.Log("bt:"+bt.actions[0].type);
 
         //get the bullet
-        Bullet temp = GetInstance(BulletManager.use.bullets[bt.prefabIndex].bl, t, BulletManager.use.bulletPrefab[bt.prefabIndex]);
+        Bullet temp = GetInstance(BulletManager.instance.bullets[bt.prefabIndex].bl, t, BulletManager.instance.bulletPrefab[bt.prefabIndex]);
 
         if (prw.prevRotationNull)
         {
             prw.prevRotationNull = false;
-            prw.previousRotation = temp.tform.localRotation;
+            prw.previousRotation = temp.transform.localRotation;
         }
+
         //set positions equal to its creator, which could be a Firetag or Bullet
-        temp.tform.position = t.position;
-        temp.tform.rotation = t.rotation;
+        temp.transform.position = t.position;
+        temp.transform.rotation = t.rotation;
         //set the abgle offset of new bullet
         float ang;
         if (a.useParam)
@@ -145,7 +146,7 @@ public class BulletPattern : MonoBehaviour
             else
                 ang = a.angle.x;
             if (a.rankAngle)
-                ang += BulletManager.use.rank * a.angle.z;
+                ang += BulletManager.instance.rank * a.angle.z;
         }
 
         //actually point the bullet in the right direction
@@ -153,31 +154,31 @@ public class BulletPattern : MonoBehaviour
         {
             case (DirectionType.TargetPlayer):
                 var originalRot = t.rotation;
-                var dotHeading = Vector3.Dot(temp.tform.up, BulletManager.use.player.position - temp.tform.position);
+                var dotHeading = Vector3.Dot(temp.transform.up, BulletManager.instance.player.position - temp.transform.position);
 
                 int dir;
                 if (dotHeading > 0)
                     dir = -1;
                 else
                     dir = 1;
-                var angleDif = Vector3.Angle(temp.tform.forward, BulletManager.use.player.position - temp.tform.position);
-                temp.tform.rotation = originalRot * Quaternion.AngleAxis((dir * angleDif) - ang, Vector3.right);
+                var angleDif = Vector3.Angle(temp.transform.forward, BulletManager.instance.player.position - temp.transform.position);
+                temp.transform.rotation = originalRot * Quaternion.AngleAxis((dir * angleDif) - ang, Vector3.right);
                 break;
 
             case (DirectionType.Absolute):
-                temp.tform.localRotation = Quaternion.Euler(-(ang - 270), 270, 0);
+                temp.transform.localRotation = Quaternion.Euler(-(ang - 270), 270, 0);
                 break;
 
             case (DirectionType.Relative):
-                temp.tform.localRotation = t.localRotation * Quaternion.AngleAxis(-ang, Vector3.right);
+                temp.transform.localRotation = t.localRotation * Quaternion.AngleAxis(-ang, Vector3.right);
                 break;
 
             case (DirectionType.Sequence):
-                temp.tform.localRotation = prw.previousRotation * Quaternion.AngleAxis(-ang, Vector3.right);
+                temp.transform.localRotation = prw.previousRotation * Quaternion.AngleAxis(-ang, Vector3.right);
                 break;
         }
         //record this rotation for next Sequence Direction
-        prw.previousRotation = temp.tform.localRotation;
+        prw.previousRotation = temp.transform.localRotation;
         //set the speed, either from creator's speed data
         if (a.overwriteBulletSpeed)
         {
@@ -187,7 +188,7 @@ public class BulletPattern : MonoBehaviour
             else
                 spd = a.speed.x;
             if (a.rankSpeed)
-                spd += BulletManager.use.rank * a.speed.z;
+                spd += BulletManager.instance.rank * a.speed.z;
 
             if (a.useSequenceSpeed)
             {
@@ -207,7 +208,7 @@ public class BulletPattern : MonoBehaviour
             else
                 temp.speed = bt.speed.x;
             if (bt.rankSpeed)
-                temp.speed += BulletManager.use.rank * bt.speed.z;
+                temp.speed += BulletManager.instance.rank * bt.speed.z;
         }
 
         //set the bullets actions array, so it can perform actions later if it has any
@@ -256,8 +257,8 @@ public class BulletPattern : MonoBehaviour
                         else
                             waitT = ft.actions[iw.idx].waitTime.x;
                         if (ft.actions[iw.idx].rankWait)
-                            waitT += BulletManager.use.rank * ft.actions[iw.idx].waitTime.z;
-                        waitT *= BulletManager.use.timePerFrame;
+                            waitT += BulletManager.instance.rank * ft.actions[iw.idx].waitTime.z;
+                        waitT *= BulletManager.instance.timePerFrame;
                         yield return new WaitForSeconds(waitT);
                         break;
 
@@ -296,7 +297,7 @@ public class BulletPattern : MonoBehaviour
 
         var repeatC = ft.actions[iw.idx].repeatCount.x;
         if (ft.actions[iw.idx].rankRepeat)
-            repeatC += ft.actions[iw.idx].repeatCount.y * BulletManager.use.rank;
+            repeatC += ft.actions[iw.idx].repeatCount.y * BulletManager.instance.rank;
         repeatC = Mathf.Floor(repeatC);
 
         iw.idx++;
@@ -314,8 +315,8 @@ public class BulletPattern : MonoBehaviour
                         else
                             waitT = ft.actions[iw.idx].waitTime.x;
                         if (ft.actions[iw.idx].rankWait)
-                            waitT += BulletManager.use.rank * ft.actions[iw.idx].waitTime.z;
-                        waitT *= BulletManager.use.timePerFrame;
+                            waitT += BulletManager.instance.rank * ft.actions[iw.idx].waitTime.z;
+                        waitT *= BulletManager.instance.timePerFrame;
                         yield return new WaitForSeconds(waitT);
                         break;
 

@@ -4,7 +4,7 @@ public class CamColliders : MonoBehaviour
 {
 
     static Transform tform;
-    public static CamColliders use;
+    public static CamColliders instance;
 
     public Transform bottom;
     public Transform top;
@@ -15,18 +15,13 @@ public class CamColliders : MonoBehaviour
 
     void Awake()
     {
-        use = this;
+        instance = this;
         tform = transform;
     }
 
-    public bool IsInsideBox(Vector3 pos)
+    public bool isOutSideBox(Vector3 pos)
     {
-        if (Physics.Linecast(pos, tform.position, collideMask))
-        {
-            return false;
-        } else {
-            return true;
-        }
+        return Physics2D.Linecast(pos, tform.position, collideMask);
     }
 
     Vector3 FindPointInBox(Vector3 pos)

@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour
     [HideInInspector]
     public Transform tform;
     [HideInInspector]
-    public Rigidbody rb;
+    public Rigidbody2D rb;
 
     [SerializeField]
     public float speed = 5f;
@@ -35,12 +35,12 @@ public class Bullet : MonoBehaviour
     {
         go = gameObject;
         tform = transform;
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody2D>();
 
         //make sure this bullet knows whos his daddy
         //actually its so 100 bullet objects dont clutter the hierarchy window
 
-        tform.parent = BulletManager.use.transform;
+        tform.parent = BulletManager.instance.transform;
     }
 
 
@@ -51,16 +51,16 @@ public class Bullet : MonoBehaviour
         // dont bother with vertical speed unless its been tampered with (see ChangeSpeedVertical..or was it SpeedChangeVertical?)
         if (useVertical)
         {
-            targetVelocity += BulletManager.use.MainCam.up * verticalSpeed;
+            targetVelocity += BulletManager.instance.MainCam.up * verticalSpeed;
         }
-        var velocityChange = (targetVelocity - rb.velocity);
-        rb.AddForce(velocityChange, ForceMode.VelocityChange);
+        var velocityChange = (targetVelocity - (Vector3)rb.velocity);
+        rb.AddForce(velocityChange, ForceMode2D.Force);
 
         //if you uncomment this stuff the bullet willl die automatically die after awhile
         // look at me tempting you like this 
 
         //lifetime += Time.deltaTime;
-        //if(lifetime > BulletManager.use.bulletLifespan)
+        //if(lifetime > BulletManager.instance.bulletLifespan)
         //	Deactivate();
 
 
@@ -80,8 +80,8 @@ public class Bullet : MonoBehaviour
                     else
                         waitT = actions[actionIndex].waitTime.x;
                     if (actions[actionIndex].rankWait)
-                        waitT += BulletManager.use.rank * actions[actionIndex].waitTime.z;
-                    waitT *= BulletManager.use.timePerFrame;
+                        waitT += BulletManager.instance.rank * actions[actionIndex].waitTime.z;
+                    waitT *= BulletManager.instance.timePerFrame;
                     yield return new WaitForSeconds(waitT);
                     break;
                 case (BulletActionType.ChangeDirection):
@@ -124,7 +124,7 @@ public class Bullet : MonoBehaviour
 
         float repeatC = actions[startIndex].repeatCount.x;
         if (actions[startIndex].rankRepeat)
-            repeatC += actions[startIndex].repeatCount.y * BulletManager.use.rank;
+            repeatC += actions[startIndex].repeatCount.y * BulletManager.instance.rank;
         repeatC = Mathf.Floor(repeatC);
 
         for (var y = 0; y < repeatC; y++)
@@ -140,8 +140,8 @@ public class Bullet : MonoBehaviour
                         else
                             waitT = actions[actionIndex].waitTime.x;
                         if (actions[actionIndex].rankWait)
-                            waitT += BulletManager.use.rank * actions[actionIndex].waitTime.z;
-                        waitT *= BulletManager.use.timePerFrame;
+                            waitT += BulletManager.instance.rank * actions[actionIndex].waitTime.z;
+                        waitT *= BulletManager.instance.timePerFrame;
                         yield return new WaitForSeconds(waitT);
                         break;
                     case (BulletActionType.ChangeDirection):
@@ -188,7 +188,7 @@ public class Bullet : MonoBehaviour
     //activate a bullet, wow what would you do without these comments?
     public void Activate()
     {
-        BulletManager.use.bulletCount++;
+        BulletManager.instance.bulletCount++;
         lifetime = 0f;
         verticalSpeed = 0f;
         useVertical = false;
@@ -200,7 +200,7 @@ public class Bullet : MonoBehaviour
     {
         if (go.activeSelf)
         {
-            BulletManager.use.bulletCount--;
+            BulletManager.instance.bulletCount--;
             go.SetActive(false);
         }
     }
@@ -217,9 +217,9 @@ public class Bullet : MonoBehaviour
         else
             d = actions[i].waitTime.x;
         if (actions[i].rankWait)
-            d += BulletManager.use.rank * actions[i].waitTime.z;
+            d += BulletManager.instance.rank * actions[i].waitTime.z;
 
-        d *= BulletManager.use.timePerFrame;
+        d *= BulletManager.instance.timePerFrame;
 
         var originalRot = tform.localRotation;
 
@@ -230,7 +230,7 @@ public class Bullet : MonoBehaviour
         else
             ang = actions[i].angle.x;
         if (actions[i].rankAngle)
-            ang += BulletManager.use.rank * actions[i].angle.z;
+            ang += BulletManager.instance.rank * actions[i].angle.z;
 
         Quaternion newRot = Quaternion.identity;
 
@@ -238,13 +238,13 @@ public class Bullet : MonoBehaviour
         switch (actions[i].direction)
         {
             case (DirectionType.TargetPlayer):
-                var dotHeading = Vector3.Dot(tform.up, BulletManager.use.player.position - tform.position);
+                var dotHeading = Vector3.Dot(tform.up, BulletManager.instance.player.position - tform.position);
                 int dir;
                 if (dotHeading > 0)
                     dir = -1;
                 else
                     dir = 1;
-                var angleDif = Vector3.Angle(tform.forward, BulletManager.use.player.position - tform.position);
+                var angleDif = Vector3.Angle(tform.forward, BulletManager.instance.player.position - tform.position);
                 newRot = originalRot * Quaternion.AngleAxis((dir * angleDif) - ang, Vector3.right);
                 break;
 
@@ -300,8 +300,8 @@ public class Bullet : MonoBehaviour
         else
             d = actions[i].waitTime.x;
         if (actions[i].rankWait)
-            d += BulletManager.use.rank * actions[i].waitTime.z;
-        d *= BulletManager.use.timePerFrame;
+            d += BulletManager.instance.rank * actions[i].waitTime.z;
+        d *= BulletManager.instance.timePerFrame;
 
         var originalSpeed = speed;
 
@@ -311,7 +311,7 @@ public class Bullet : MonoBehaviour
         else
             newSpeed = actions[i].speed.x;
         if (actions[i].rankSpeed)
-            d += BulletManager.use.rank * actions[i].speed.z;
+            d += BulletManager.instance.rank * actions[i].speed.z;
 
         if (d > 0)
         {
@@ -333,11 +333,11 @@ public class Bullet : MonoBehaviour
     //if a bullet leaves the boundary then make sure it actually left the screen, not enetered it
     // if it did, then deactivate
     // this process MAY be too intensive for iPhone, but then it does keep bullet number under control
-    void OnTriggerExit(Collider other)
+    void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Boundary"))
         {
-            if (!CamColliders.use.IsInsideBox(tform.position))
+            if (CamColliders.instance.isOutSideBox(tform.position))
             {
                 Deactivate();
             }
@@ -345,6 +345,7 @@ public class Bullet : MonoBehaviour
         }
     }
 
+   
 
 }
 
